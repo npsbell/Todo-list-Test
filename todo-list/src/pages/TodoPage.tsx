@@ -1,41 +1,56 @@
-import { useEffect, useState } from "react"
-import { fetchTodos } from "../api/TodoApi"
-import type { Todo } from "../types/Todo"
+import { useState } from "react"
+import { useTodos } from "../hooks/useTodos"
 
 export const TodoPage = () => {
 
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { todos, addTodo, deleteTodo, toggleTodo } = useTodos()
 
-  useEffect(() => {
-    const loadTodos = async () => {
-      try {
-        const data = await fetchTodos()
-        setTodos(data)
-      } catch (err) {
-        setError("Failed to load todos")
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadTodos()
-  }, [])
+  const [title, setTitle] = useState("")
 
-  if (loading) return <p>Loading todos...</p>
-  if (error) return <p>{error}</p>
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!title.trim()) return
+    addTodo(title)
+    setTitle("")
+  }
 
   return (
     <div>
       <h1>Todo List</h1>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Add new todo..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <button type="submit">
+          Add
+        </button>
+      </form>
+
       <ul>
         {todos.map(todo => (
           <li key={todo.id}>
             <p>{todo.title}</p>
             <p>{todo.description}</p>
+
             <span>
               {todo.completed ? "Done" : "Not Done"}
             </span>
+
+            <div>
+              <button onClick={() => toggleTodo(todo.id)}>
+                Toggle
+              </button>
+
+              <button onClick={() => deleteTodo(todo.id)}>
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
