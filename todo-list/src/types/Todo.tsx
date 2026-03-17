@@ -4,3 +4,10 @@ export interface Todo {
   description: string
   completed: boolean
 }
+
+export interface TodoContextType {
+  todos: Todo[]
+  addTodo(title: string): void
+  deleteTodo(id: number): void
+  toggleTodo(id: number): void
+}
