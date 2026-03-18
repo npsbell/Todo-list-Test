@@ -3,7 +3,7 @@
 ## 🚀 How to Run
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/npsbell/Todo-list-Test.git
 cd todo-list
 npm install
 npm run dev
