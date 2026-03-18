@@ -3,7 +3,8 @@ import { fetchTodos } from "../api/TodoApi"
 import {
   addTodo,
   deleteTodo,
-  toggleTodo
+  toggleTodo,
+  editTodo
 } from "../services/TodoService"
 import type { Todo, TodoContextType } from "../types/Todo"
 
@@ -30,13 +31,13 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     loadTodos()
   }, [])
 
-  const handleAddTodo = (title: string) => {
-    try {
-      setTodos(prev => addTodo(prev, title))
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const handleAddTodo = (title: string, description: string) => {
+  setTodos(prev => addTodo(prev, title, description))
+}
+
+ const handleEditTodo = (id: number, title: string, description: string) => {
+  setTodos(prev => editTodo(prev, id, title, description))
+}
 
   const handleDeleteTodo = (id: number) => {
     setTodos(prev => deleteTodo(prev, id))
@@ -55,7 +56,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
         todos,
         addTodo: handleAddTodo,
         deleteTodo: handleDeleteTodo,
-        toggleTodo: handleToggleTodo
+        toggleTodo: handleToggleTodo,
+        editTodo: handleEditTodo
       }}
     >
       {children}
