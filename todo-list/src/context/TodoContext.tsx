@@ -21,10 +21,12 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const loadTodos = async () => {
       try {
+        setLoading(true);
         const data = await fetchTodos();
         setTodos(data);
-      } catch {
-        setError("Error loading todos");
+        setError(null);
+      } catch (err: any) {
+        setError(err?.message || "Error loading todos");
       } finally {
         setLoading(false);
       }
@@ -65,9 +67,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     alert("Status updated");
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <TodoContext.Provider
       value={{
@@ -76,6 +75,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
         deleteTodo: handleDeleteTodo,
         toggleTodo: handleToggleTodo,
         editTodo: handleEditTodo,
+        loading,
+        error,
       }}
     >
       {children}

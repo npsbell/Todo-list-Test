@@ -11,4 +11,6 @@ export interface TodoContextType {
   deleteTodo(id: number): void
   toggleTodo(id: number): void
   editTodo(id: number, title: string, description: string): void 
+  loading: boolean        
+  error: string | null   
 }

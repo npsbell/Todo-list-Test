@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useTodos } from "../hooks/useTodos";
 
 export const TodoPage = () => {
-  const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos();
+  const { todos, addTodo, deleteTodo, toggleTodo, editTodo, loading, error } =
+    useTodos();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -38,6 +39,49 @@ export const TodoPage = () => {
     setEditTitle("");
     setEditDescription("");
   };
+
+  // Loading State
+  if (loading) {
+    return (
+      <div className="todo-page">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <h2>Loading todos...</h2>
+          <p>Please wait a moment</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error State
+  if (error) {
+    return (
+      <div className="todo-page">
+        <div className="error-state">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+          <h2>Oops! Something went wrong</h2>
+          <p className="error-message">{error}</p>
+          <button
+            className="btn btn-primary"
+            onClick={() => window.location.reload()}
+          >
+            🔄 Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="todo-page">
