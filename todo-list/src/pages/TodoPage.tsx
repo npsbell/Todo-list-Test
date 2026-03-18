@@ -1,41 +1,49 @@
-import { useState } from "react"
-import { useTodos } from "../hooks/useTodos"
+import { useState } from "react";
+import { useTodos } from "../hooks/useTodos";
 
 export const TodoPage = () => {
-  const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos()
+  const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos();
 
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [editTitle, setEditTitle] = useState("")
-  const [editDescription, setEditDescription] = useState("")
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!title.trim()) return
+    e.preventDefault();
+    if (!title.trim() || !description.trim()) {
+      alert("Please fill in both title and description");
+      return;
+    }
 
-    addTodo(title, description)
-    setTitle("")
-    setDescription("")
-  }
+    addTodo(title, description);
+    setTitle("");
+    setDescription("");
+  };
 
   const handleEditSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (editingId === null) return
+    e.preventDefault();
+    if (editingId === null) return;
 
-    editTodo(editingId, editTitle, editDescription)
+    if (!editTitle.trim()) {
+      alert("Title is required");
+      return;
+    }
 
-    setEditingId(null)
-    setEditTitle("")
-    setEditDescription("")
-  }
+    editTodo(editingId, editTitle, editDescription);
+
+    setEditingId(null);
+    setEditTitle("");
+    setEditDescription("");
+  };
 
   return (
     <div className="todo-page">
-      <h1>✨ My Todo List</h1>
+      <h1>My Todo List</h1>
 
-      {/* ADD FORM */}
+      {/* Add form */}
       <form onSubmit={handleSubmit} className="todo-form">
         <div className="form-group">
           <label htmlFor="title">📝 Title</label>
@@ -56,7 +64,8 @@ export const TodoPage = () => {
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter todo description (optional)"
+            placeholder="Enter todo description"
+            required
           />
         </div>
 
@@ -65,13 +74,13 @@ export const TodoPage = () => {
         </button>
       </form>
 
-      {/* TODO LIST */}
+      {/* Todo List */}
       {todos.length === 0 ? (
         <div className="empty-state">
-          <svg 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             strokeWidth="2"
           >
             <path d="M9 11l3 3L22 4" />
@@ -82,8 +91,11 @@ export const TodoPage = () => {
         </div>
       ) : (
         <ul className="todo-list">
-          {todos.map(todo => (
-            <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+          {todos.map((todo) => (
+            <li
+              key={todo.id}
+              className={`todo-item ${todo.completed ? "completed" : ""}`}
+            >
               {editingId === todo.id ? (
                 <form onSubmit={handleEditSubmit} className="edit-form">
                   <div className="form-group">
@@ -98,7 +110,9 @@ export const TodoPage = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor={`edit-desc-${todo.id}`}>📄 Description</label>
+                    <label htmlFor={`edit-desc-${todo.id}`}>
+                      📄 Description
+                    </label>
                     <input
                       id={`edit-desc-${todo.id}`}
                       type="text"
@@ -111,8 +125,8 @@ export const TodoPage = () => {
                     <button type="submit" className="btn btn-success">
                       💾 Save
                     </button>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => setEditingId(null)}
                       className="btn btn-secondary"
                     >
@@ -125,32 +139,34 @@ export const TodoPage = () => {
                   <div className="todo-content">
                     <h3>{todo.title}</h3>
                     {todo.description && <p>{todo.description}</p>}
-                    
-                    <span className={`todo-status ${todo.completed ? 'done' : 'not-done'}`}>
-                      {todo.completed ? '✅ Done' : '⏳ Not Done'}
+
+                    <span
+                      className={`todo-status ${todo.completed ? "done" : "not-done"}`}
+                    >
+                      {todo.completed ? "✅ Done" : "⏳ Not Done"}
                     </span>
                   </div>
 
                   <div className="todo-actions">
-                    <button 
+                    <button
                       onClick={() => toggleTodo(todo.id)}
                       className="btn btn-primary"
                     >
-                      {todo.completed ? '↩️ Undo' : '✓ Complete'}
+                      {todo.completed ? "↩️ Undo" : "✓ Complete"}
                     </button>
 
                     <button
                       onClick={() => {
-                        setEditingId(todo.id)
-                        setEditTitle(todo.title)
-                        setEditDescription(todo.description)
+                        setEditingId(todo.id);
+                        setEditTitle(todo.title);
+                        setEditDescription(todo.description);
                       }}
                       className="btn btn-warning"
                     >
                       ✏️ Edit
                     </button>
 
-                    <button 
+                    <button
                       onClick={() => deleteTodo(todo.id)}
                       className="btn btn-danger"
                     >
@@ -164,5 +180,5 @@ export const TodoPage = () => {
         </ul>
       )}
     </div>
-  )
-}
+  );
+};
