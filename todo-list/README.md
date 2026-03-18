@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# 📝 Todo List App (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 How to Run
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <repo-url>
+cd todo-list
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open: http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 💡 Thought Process
+
+This project was designed with a focus on **clean structure, scalability, and maintainability**, even for a small application.
+
+---
+
+### 🧠 Architecture & Structure
+
+The codebase is organized into clear layers to follow separation of concerns:
+
+* `api/` → handles data fetching
+* `services/` → contains business logic (validation, CRUD operations)
+* `context/` → manages global state using React Context API
+* `hooks/` → provides custom hooks (e.g., `useTodos`) for cleaner state access
+* `types/` → defines shared TypeScript interfaces (Todo, Context types)
+* `pages/` → responsible for UI rendering
+
+This structure improves readability, reusability, and makes the code easier to scale.
+
+---
+
+### ⚙️ State Management
+
+I used **React Context API** to manage global state and avoid prop drilling.
+A custom hook (`useTodos`) is used to encapsulate context logic and simplify usage across components.
+
+---
+
+### ✅ Validation Strategy
+
+Validation is implemented in multiple layers:
+
+* UI layer: prevents empty input before submission
+* Service layer: enforces rules (length, required fields) and throws errors
+
+This ensures consistent and reliable data handling.
+
+---
+
+### ⏳ Loading & ❌ Error Handling
+
+* Implemented `loading` and `error` states in the Context layer
+* Displayed a loading spinner during data fetching
+* Provided an error UI with a retry option
+
+---
+
+### 🎯 User Experience
+
+* Alerts provide immediate feedback for user actions
+* Confirmation dialog prevents accidental deletion
+* Controlled form inputs ensure better state management
+
+---
+
+### 🌐 Routing
+
+Used React Router to manage navigation and implemented a **404 page** for unknown routes.
+
+---
+
+## 📌 Notes
+
+* Uses a mock API (`/todos.json`)
+* All CRUD operations are handled on the client side
+* Designed to be easily extendable (e.g., connect to real backend or add new features)
+
+---
